@@ -1,13 +1,25 @@
 import React from 'react';
+import { fetchProducts } from '../api/api';
+import ProductCard from '../components/ProductCard';
 
-const Home: React.FC = () => {
-    return (
-        <div>
-            <h1>Welcome to the Medusa Storefront</h1>
-            <p>Explore our featured products below!</p>
-            {/* Add featured products component or list here */}
-        </div>
-    );
-};
+export default async function Home() {
+  const products = await fetchProducts();
 
-export default Home;
+  return (
+    <div>
+      <h1>Products</h1>
+      <div className="product-list">
+        {products.map((product: any) => (
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            title={product.title}
+            description={product.description}
+            price={product.variants[0]?.prices[0]?.amount / 100 || 0}
+            imageUrl={product.thumbnail || '/placeholder.png'}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
